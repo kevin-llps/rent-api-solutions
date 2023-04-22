@@ -1,6 +1,7 @@
 package fr.esgi.rent.samples;
 
 import fr.esgi.rent.beans.RentalProperty;
+import fr.esgi.rent.dto.request.RentalPropertyRequestDto;
 
 import java.util.List;
 
@@ -75,6 +76,26 @@ public class RentalPropertySample {
     public static RentalProperty oneRentalProperty() {
         return new RentalProperty(
                 46890,
+                "Appartement spacieux avec vue sur l'ESGI",
+                "Paris",
+                "77 Rue des roses",
+                FLAT,
+                750.90,
+                1200.90,
+                37.48,
+                2,
+                1,
+                3,
+                1990,
+                D,
+                true,
+                true,
+                true,
+                true);
+    }
+
+    public static RentalPropertyRequestDto oneRentalPropertyRequestDto() {
+        return new RentalPropertyRequestDto(
                 "Appartement spacieux avec vue sur l'ESGI",
                 "Paris",
                 "77 Rue des roses",

@@ -48,6 +48,28 @@ public record RentalProperty(
                 testIfCsvFieldHasExpectedValue.test(csvRecord.get(headers[16])));
     }
 
+    public String[] getDataColumns() {
+        return new String[]{
+                String.valueOf(referenceId),
+                description,
+                town,
+                address,
+                String.valueOf(propertyType),
+                String.valueOf(rentAmount),
+                String.valueOf(securityDepositAmount),
+                String.valueOf(area),
+                String.valueOf(bedroomsCount),
+                String.valueOf(floorNumber),
+                String.valueOf(numberOfFloors),
+                String.valueOf(constructionYear),
+                String.valueOf(energyClassification),
+                String.valueOf(hasElevator),
+                String.valueOf(hasIntercom),
+                String.valueOf(hasBalcony),
+                String.valueOf(hasParkingSpace)
+        };
+    }
+
     private static int getFloorNumber(PropertyType propertyType, CSVRecord csvRecord, String[] headers) {
         if (FLAT.equals(propertyType)) {
             return Integer.parseInt(csvRecord.get(headers[9]));

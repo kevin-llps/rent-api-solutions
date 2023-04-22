@@ -1,10 +1,12 @@
 package fr.esgi.rent.api;
 
 import fr.esgi.rent.beans.RentalProperty;
-import fr.esgi.rent.dto.RentalPropertyDto;
+import fr.esgi.rent.dto.request.RentalPropertyRequestDto;
+import fr.esgi.rent.dto.response.RentalPropertyResponseDto;
 import fr.esgi.rent.exception.NotFoundRentalPropertyException;
 import fr.esgi.rent.mapper.RentalPropertyDtoMapper;
 import fr.esgi.rent.services.RentalPropertiesFileParser;
+import fr.esgi.rent.services.RentalPropertiesFileWriter;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -17,7 +19,7 @@ import static fr.esgi.rent.beans.EnergyClassification.D;
 import static fr.esgi.rent.beans.PropertyType.FLAT;
 import static fr.esgi.rent.samples.RentalPropertyDtoSample.oneRentalPropertyDto;
 import static fr.esgi.rent.samples.RentalPropertyDtoSample.rentalPropertyDtoList;
-import static fr.esgi.rent.samples.RentalPropertySample.rentalProperties;
+import static fr.esgi.rent.samples.RentalPropertySample.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.Mockito.*;
@@ -32,17 +34,20 @@ class RentalPropertyResourceTest {
     private RentalPropertiesFileParser rentalPropertiesFileParser;
 
     @Mock
+    private RentalPropertiesFileWriter rentalPropertiesFileWriter;
+
+    @Mock
     private RentalPropertyDtoMapper rentalPropertyDtoMapper;
 
     @Test
     void shouldGetRentalProperties() {
-        List<RentalPropertyDto> expectedRentalPropertyDtoList = rentalPropertyDtoList();
+        List<RentalPropertyResponseDto> expectedRentalPropertyDtoList = rentalPropertyDtoList();
         List<RentalProperty> rentalProperties = rentalProperties();
 
         when(rentalPropertiesFileParser.parse("rentalProperties.csv")).thenReturn(rentalProperties);
         when(rentalPropertyDtoMapper.mapToDtoList(rentalProperties)).thenReturn(expectedRentalPropertyDtoList);
 
-        List<RentalPropertyDto> rentalPropertyDtoList = rentalPropertyResource.getRentalProperties();
+        List<RentalPropertyResponseDto> rentalPropertyDtoList = rentalPropertyResource.getRentalProperties();
 
         assertThat(rentalPropertyDtoList).containsExactlyInAnyOrderElementsOf(expectedRentalPropertyDtoList);
 
@@ -56,14 +61,14 @@ class RentalPropertyResourceTest {
     void shouldGetRentalProperty() {
         List<RentalProperty> rentalProperties = rentalProperties();
         RentalProperty rentalProperty = rentalProperty();
-        RentalPropertyDto expectedRentalPropertyDto = oneRentalPropertyDto();
+        RentalPropertyResponseDto expectedRentalPropertyDto = oneRentalPropertyDto();
 
         when(rentalPropertiesFileParser.parse("rentalProperties.csv")).thenReturn(rentalProperties);
         when(rentalPropertyDtoMapper.mapToDto(rentalProperty)).thenReturn(expectedRentalPropertyDto);
 
-        RentalPropertyDto rentalPropertyDto = rentalPropertyResource.getRentalProperty(46890);
+        RentalPropertyResponseDto rentalPropertyResponseDto = rentalPropertyResource.getRentalProperty(46890);
 
-        assertThat(rentalPropertyDto).isEqualTo(expectedRentalPropertyDto);
+        assertThat(rentalPropertyResponseDto).isEqualTo(expectedRentalPropertyDto);
 
         verify(rentalPropertiesFileParser).parse("rentalProperties.csv");
         verify(rentalPropertyDtoMapper).mapToDto(rentalProperty);
@@ -85,6 +90,26 @@ class RentalPropertyResourceTest {
 
         verifyNoInteractions(rentalPropertyDtoMapper);
         verifyNoMoreInteractions(rentalPropertiesFileParser);
+    }
+
+    @Test
+    void shouldAddRentalProperty() {
+        RentalPropertyRequestDto rentalPropertyRequestDto = oneRentalPropertyRequestDto();
+        RentalProperty rentalProperty = oneRentalProperty();
+        RentalPropertyResponseDto expectedRentalPropertyDto = oneRentalPropertyDto();
+
+        when(rentalPropertyDtoMapper.mapToBean(rentalPropertyRequestDto)).thenReturn(rentalProperty);
+        when(rentalPropertyDtoMapper.mapToDto(rentalProperty)).thenReturn(expectedRentalPropertyDto);
+
+        RentalPropertyResponseDto rentalPropertyResponseDto = rentalPropertyResource.addRentalProperty(rentalPropertyRequestDto);
+
+        assertThat(rentalPropertyResponseDto).isEqualTo(expectedRentalPropertyDto);
+
+        verify(rentalPropertyDtoMapper).mapToBean(rentalPropertyRequestDto);
+        verify(rentalPropertyDtoMapper).mapToDto(rentalProperty);
+        verify(rentalPropertiesFileWriter).addRentalProperty(rentalProperty);
+
+        verifyNoMoreInteractions(rentalPropertyDtoMapper, rentalPropertiesFileWriter);
     }
 
     private RentalProperty rentalProperty() {

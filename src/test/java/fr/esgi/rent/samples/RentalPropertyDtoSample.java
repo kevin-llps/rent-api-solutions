@@ -1,6 +1,6 @@
 package fr.esgi.rent.samples;
 
-import fr.esgi.rent.dto.RentalPropertyDto;
+import fr.esgi.rent.dto.response.RentalPropertyResponseDto;
 
 import java.util.List;
 
@@ -9,10 +9,10 @@ import static fr.esgi.rent.beans.PropertyType.HOUSE;
 
 public class RentalPropertyDtoSample {
 
-    public static List<RentalPropertyDto> rentalPropertyDtoList() {
-        RentalPropertyDto rentalProperty = oneRentalPropertyDto();
+    public static List<RentalPropertyResponseDto> rentalPropertyDtoList() {
+        RentalPropertyResponseDto rentalProperty = oneRentalPropertyDto();
 
-        RentalPropertyDto largeFlat = new RentalPropertyDto(
+        RentalPropertyResponseDto largeFlat = new RentalPropertyResponseDto(
                 "Appartement bien situé près du métro et des commerces",
                 "90 rue de la Victoire",
                 "Neuilly-sur-Seine",
@@ -21,7 +21,7 @@ public class RentalPropertyDtoSample {
                 1250.90,
                 50.69);
 
-        RentalPropertyDto house = new RentalPropertyDto(
+        RentalPropertyResponseDto house = new RentalPropertyResponseDto(
                 "Maison à louer dans banlieue calme et proche du RER",
                 "12 rue de la Pyramide",
                 "Champs-sur-Marne",
@@ -33,8 +33,8 @@ public class RentalPropertyDtoSample {
         return List.of(rentalProperty, largeFlat, house);
     }
 
-    public static RentalPropertyDto oneRentalPropertyDto() {
-        return new RentalPropertyDto(
+    public static RentalPropertyResponseDto oneRentalPropertyDto() {
+        return new RentalPropertyResponseDto(
                 "Appartement spacieux avec vue sur l'ESGI",
                 "77 Rue des roses",
                 "Paris",

@@ -24,6 +24,7 @@
         <mockito-core.version>5.1.1</mockito-core.version>
         <assertj-core.version>3.24.2</assertj-core.version>
         <jakarta.jakartaee-web-api.version>10.0.0</jakarta.jakartaee-web-api.version>
+        <microprofile-config-api.version>3.0.3</microprofile-config-api.version>
     </properties>
 
     <dependencies>
@@ -78,6 +79,12 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-csv</artifactId>
             <version>${commons-csv.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.microprofile.config</groupId>
+            <artifactId>microprofile-config-api</artifactId>
+            <version>${microprofile-config-api.version}</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
